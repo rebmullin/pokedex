@@ -16,12 +16,12 @@ var repository = [
   },
 ];
 
-for (var i = 0; i < repository.length; i++) {
-  var waterClass = repository[i].types.includes("water") ? "water" : "";
-  var heightInfo = " (height:" + repository[i].height + ")";
+repository.forEach(function(item) {
+  var waterClass = item.types.includes("water") ? "water" : "";
+  var heightInfo = "(height:" + item.height + ")";
   var heightText =
-    repository[i].height > 5 ? heightInfo + " - Wow, that's big!" : heightInfo;
+    item.height > 5 ? heightInfo + " - Wow, that's big!" : heightInfo;
   document.write(
-    "<li class=" + waterClass + ">" + repository[i].name + heightText + "</li>",
+    "<li class=" + waterClass + ">" + item.name + heightText + "</li>",
   );
-}
+});
