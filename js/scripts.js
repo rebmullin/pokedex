@@ -17,13 +17,11 @@ var repository = [
 ];
 
 for (var i = 0; i < repository.length; i++) {
-  var bigText = repository[i].height > 5 ? " - Wow, that's big!" : "";
+  var waterClass = repository[i].types.includes("water") ? "water" : "";
+  var heightInfo = " (height:" + repository[i].height + ")";
+  var heightText =
+    repository[i].height > 5 ? heightInfo + " - Wow, that's big!" : heightInfo;
   document.write(
-    "<li>" +
-      repository[i].name +
-      " height:" +
-      repository[i].height +
-      bigText +
-      "</li>",
+    "<li class=" + waterClass + ">" + repository[i].name + heightText + "</li>",
   );
 }
