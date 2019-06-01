@@ -1,5 +1,5 @@
-var pokemonRepository = (function() {
-  var repository = [
+const pokemonRepository = (function() {
+  const repository = [
     {
       name: "Bulbassaur",
       height: 7,
@@ -38,14 +38,55 @@ var pokemonRepository = (function() {
     });
   }
 
+  function addListItem(item) {
+    $list = document.querySelector(".dog-list");
+    const newElement = document.createElement("li");
+    newElement.classList.add("dog-list__item");
+
+    $list.appendChild(newElement);
+
+    // let newSpan = document.createElement("span");
+    const newButton = document.createElement("button");
+
+    $newListItem = document.querySelector(".dog-list__item:last-child");
+    // $newListItem.appendChild(newSpan);
+    $newListItem.appendChild(newButton);
+
+    // $newListItemSpan = document.querySelector(
+    //   ".dog-list__item:last-child span",
+    // );
+
+    // const spanNode = document.createTextNode(item.name);
+
+    // $newListItemSpan.appendChild(spanNode);
+
+    $newListItemButton = document.querySelector(
+      ".dog-list__item:last-child button",
+    );
+
+    const buttonNode = document.createTextNode("See " + item.name);
+
+    $newListItemButton.appendChild(buttonNode);
+
+    $newListItemButton.addEventListener("click", function() {
+      showDetails(item);
+    });
+  }
+
+  function showDetails(pokemon) {
+    console.log("REBB pokemon", pokemon);
+  }
+
   return {
     add: add,
     getAll: getAll,
     filter: filter,
+    addListItem: addListItem,
+    showDetails: showDetails,
   };
 })();
 
-var repoItems = pokemonRepository.getAll();
+const repoItems = pokemonRepository.getAll();
 
 pokemonRepository.add({
   name: "Bulbassaur2",
@@ -53,14 +94,8 @@ pokemonRepository.add({
   types: ["water", "poison"],
 });
 
-console.log(pokemonRepository.filter("Bulbassaur"));
+// console.log(pokemonRepository.filter("Bulbassaur"));
 
 repoItems.forEach(function(item) {
-  var waterClass = item.types.includes("water") ? "water" : "";
-  var heightInfo = "(height:" + item.height + ")";
-  var heightText =
-    item.height > 5 ? heightInfo + " - Wow, that's big!" : heightInfo;
-  document.write(
-    "<li class=" + waterClass + ">" + item.name + heightText + "</li>",
-  );
+  pokemonRepository.addListItem(item);
 });
