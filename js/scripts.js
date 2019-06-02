@@ -1,32 +1,13 @@
 const pokemonRepository = (function() {
-  const repository = [
-    {
-      name: "Bulbassaur",
-      height: 7,
-      types: ["grass", "poison"],
-    },
-    {
-      name: "Squirtle",
-      height: 2,
-      types: ["water"],
-    },
-    {
-      name: "Butterfree",
-      height: 2,
-      types: ["bug"],
-    },
-  ];
+  const repository = [];
+  const apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=150";
 
   function getAll() {
     return repository;
   }
 
   function add(item) {
-    if (
-      typeof item === "object" &&
-      JSON.stringify(Object.keys(item)) ===
-        JSON.stringify(Object.keys(repository[0]))
-    ) {
+    if (typeof item === "object") {
       repository.push(item);
     }
   }
@@ -73,8 +54,47 @@ const pokemonRepository = (function() {
     });
   }
 
-  function showDetails(pokemon) {
-    console.log("REBB pokemon", pokemon);
+  function showDetails(item) {
+    loadDetails(item).then(function(pokemon) {
+      console.log(pokemon);
+    });
+  }
+
+  function loadList() {
+    return fetch(apiUrl)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(json) {
+        json.results.forEach(function(item) {
+          const pokemon = {
+            name: item.name,
+            detailsUrl: item.url,
+          };
+          add(pokemon);
+        });
+      })
+      .catch(function(e) {
+        console.error(e);
+      });
+  }
+
+  function loadDetails(item) {
+    let url = item.detailsUrl;
+    return fetch(url)
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(details) {
+        // Now we add the details to the item
+        item.imageUrl = details.sprites.front_default;
+        item.height = details.height;
+        item.types = Object.keys(details.types);
+        return item;
+      })
+      .catch(function(e) {
+        console.error(e);
+      });
   }
 
   return {
@@ -83,19 +103,14 @@ const pokemonRepository = (function() {
     filter: filter,
     addListItem: addListItem,
     showDetails: showDetails,
+    loadList: loadList,
+    loadDetails: loadDetails,
   };
 })();
 
-const repoItems = pokemonRepository.getAll();
-
-pokemonRepository.add({
-  name: "Bulbassaur2",
-  height: 10,
-  types: ["water", "poison"],
-});
-
-// console.log(pokemonRepository.filter("Bulbassaur"));
-
-repoItems.forEach(function(item) {
-  pokemonRepository.addListItem(item);
+pokemonRepository.loadList().then(function() {
+  // Now the data is loaded!
+  pokemonRepository.getAll().forEach(function(pokemon) {
+    pokemonRepository.addListItem(pokemon);
+  });
 });
