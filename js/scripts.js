@@ -50,14 +50,22 @@ const pokemonRepository = (function() {
     $newListItemButton.appendChild(buttonNode);
 
     $newListItemButton.addEventListener("click", function() {
+      showLoadingMessage();
       showDetails(item);
     });
   }
 
   function showDetails(item) {
-    loadDetails(item).then(function(pokemon) {
-      console.log(pokemon);
-    });
+    loadDetails(item)
+      .then(function(pokemon) {
+        console.log(pokemon);
+      })
+      .then(function() {
+        // shideLoadingMessage();
+      })
+      .catch(function(e) {
+        console.error(e);
+      });
   }
 
   function loadList() {
@@ -77,6 +85,20 @@ const pokemonRepository = (function() {
       .catch(function(e) {
         console.error(e);
       });
+  }
+
+  function showLoadingMessage() {
+    const newElement = document.createElement("p");
+    newElement.classList.add("loading");
+    $body = document.querySelector("body");
+    const text = document.createTextNode("Loading...");
+    newElement.appendChild(text);
+    $body.appendChild(newElement);
+  }
+
+  function hideLoadingMessage() {
+    $loading = document.querySelector(".loading");
+    $loading.parentNode.removeChild($loading);
   }
 
   function loadDetails(item) {
@@ -105,12 +127,23 @@ const pokemonRepository = (function() {
     showDetails: showDetails,
     loadList: loadList,
     loadDetails: loadDetails,
+    showLoadingMessage: showLoadingMessage,
+    hideLoadingMessage: hideLoadingMessage,
   };
 })();
 
-pokemonRepository.loadList().then(function() {
-  // Now the data is loaded!
-  pokemonRepository.getAll().forEach(function(pokemon) {
-    pokemonRepository.addListItem(pokemon);
+pokemonRepository.showLoadingMessage();
+pokemonRepository
+  .loadList()
+  .then(function() {
+    // Now the data is loaded!
+    pokemonRepository.getAll().forEach(function(pokemon) {
+      pokemonRepository.addListItem(pokemon);
+    });
+  })
+  .then(function() {
+    pokemonRepository.hideLoadingMessage();
+  })
+  .catch(function(e) {
+    console.error(e);
   });
-});
