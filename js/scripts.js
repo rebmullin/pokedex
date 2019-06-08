@@ -58,7 +58,8 @@ const pokemonRepository = (function() {
   function showDetails(item) {
     loadDetails(item)
       .then(function(pokemon) {
-        console.log(pokemon);
+        // console.log(pokemon);
+        showModal(pokemon);
       })
       .then(function() {
         // shideLoadingMessage();
@@ -66,6 +67,70 @@ const pokemonRepository = (function() {
       .catch(function(e) {
         console.error(e);
       });
+  }
+
+  function showModal(pokemon) {
+    const $modalWrapper = document.querySelector(".modal-wrapper");
+
+    // Clear out any modal content
+    $modalWrapper.innerHTML = "";
+    modal = document.createElement("div");
+    modal.classList.add("modal");
+    $modalWrapper.appendChild(modal);
+
+    const closeButton = document.createElement("button");
+    closeButton.classList.add("modal-close");
+    closeButton.addEventListener("click", hideModal);
+
+    modal.appendChild(closeButton);
+
+    // Add pokemon details to display
+    const pokemonDetails = document.createElement("div");
+    pokemonDetails.classList.add("pokemon");
+    modal.appendChild(pokemonDetails);
+
+    const pokemonName = document.createElement("h2");
+    pokemonName.classList.add("pokemon-title");
+    pokemonName.innerText = pokemon.name;
+    pokemonDetails.appendChild(pokemonName);
+
+    const pokemonImage = document.createElement("img");
+    pokemonImage.classList.add("pokemon-image");
+    pokemonImage.src = pokemon.imageUrl;
+    pokemonImage.alt = pokemon.name;
+    pokemonDetails.appendChild(pokemonImage);
+
+    const pokemonHeight = document.createElement("p");
+    pokemonHeight.classList.add("pokemon-height");
+    pokemonHeight.innerText = "Height: " + String(pokemon.height);
+    pokemonDetails.appendChild(pokemonHeight);
+
+    $modalWrapper.classList.add("modal-wrapper--show");
+  }
+
+  // Hide modal on Esc keydown
+  window.addEventListener("keydown", function(e) {
+    const $modalWrapper = document.querySelector(".modal-wrapper");
+    if (
+      e.key === "Escape" &&
+      $modalWrapper.classList.contains("modal-wrapper--show")
+    ) {
+      hideModal();
+    }
+  });
+
+  // Hide modal on click outside of modal but on overlay
+  const $modalWrapper = document.querySelector(".modal-wrapper");
+  $modalWrapper.addEventListener("click", function(e) {
+    const target = e.target;
+    if (target === $modalWrapper) {
+      hideModal();
+    }
+  });
+
+  function hideModal() {
+    const $modal = document.querySelector(".modal-wrapper");
+    $modal.classList.remove("modal-wrapper--show");
   }
 
   function loadList() {

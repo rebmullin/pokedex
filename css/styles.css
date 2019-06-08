@@ -69,3 +69,49 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.modal-wrapper {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  display: none;
+}
+
+.modal-wrapper--show {
+  display: grid;
+}
+
+.modal {
+  background-color: #fff;
+  max-width: 500px;
+  margin: auto;
+  padding: 15px;
+  width: 100%;
+}
+
+.modal-close {
+  float: right;
+  color: #777;
+  border: 0;
+  cursor: pointer;
+}
+
+.modal-close::after {
+  content: "X";
+  font-size: 18px;
+}
+
+.pokemon {
+  text-align: center;
+}
+
+.pokemon-title {
+  text-transform: capitalize;
+}
+
+.pokemon-image {
+  display: block;
+  margin: auto;
+}
